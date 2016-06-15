@@ -1,0 +1,77 @@
+// Creates Tab On Top of Menu
+function onOpen() {
+  SpreadsheetApp.getUi() 
+      .createMenu('Extra Functions')
+      .addItem('Check Tasks', 'dateChecker')
+      .addToUi();
+}
+
+// Pop-up Menu for Calls, Recieves Name of Company
+function callAlert(x) {
+  var ui = SpreadsheetApp.getUi(); // Same variations.
+
+  var result = ui.alert(
+     'You need to call ' + x + ' today!',
+     'Continue?',
+      ui.ButtonSet.OK);
+
+  // Process the user's response.
+  if (result == ui.Button.YES) {
+    // User clicked "Yes".
+    ui.alert('Confirmation received.');
+  } 
+}
+
+// Pop-up Menu for Demos, Recieves Name of Company
+function demoAlert(x) {
+  var ui = SpreadsheetApp.getUi(); // Same variations.
+
+  var result = ui.alert(
+     'You have a demo with ' + x + ' today!',
+     'Continue?',
+      ui.ButtonSet.OK);
+
+  // Process the user's response.
+  if (result == ui.Button.YES) {
+    // User clicked "Yes".
+    ui.alert('Confirmation received.');
+  } 
+}
+
+//Iterates Over Data Set and Reads in Information
+function dateChecker() {
+ 
+  //Creates var for today's date in form mm-dd-yyyy
+  var today = new Date();
+  var d = today.getDate();
+  var m = today.getMonth() + 1;
+  var y = today.getFullYear();
+  var tdDate = m + "-" + d + "-" + y;
+  
+  //Applys ranges
+  var rangeDates = SpreadsheetApp.getActiveSheet().getRange('H2:H100');
+  var rangeCompanies = SpreadsheetApp.getActiveSheet().getRange('A2:A100');
+   var rangeActions = SpreadsheetApp.getActiveSheet().getRange('G2:G100');
+  
+  var numRows = rangeDates.getNumRows();
+  var numCols = rangeDates.getNumColumns();
+  
+  //Iteration
+  for (var i = 1; i <= numRows; i++) {
+    for (var j = 1; j <= numCols; j++) {
+      
+     var date = rangeDates.getCell(i,j).getValue();
+     var name = rangeCompanies.getCell(i,j).getValue();
+     var action = rangeActions.getCell(i,j).getValue();
+      
+      if (date == tdDate){
+        if(action == 'Demo'){
+          demoAlert(name);
+        }
+        else{
+          callAlert(name); 
+        }
+      }
+    }
+  }
+}
